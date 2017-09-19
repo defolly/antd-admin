@@ -6,19 +6,29 @@ import pathToRegexp from 'path-to-regexp'
 import { connect } from 'dva'
 import { Layout, Loader } from 'components'
 import { classnames, config } from 'utils'
+import { Tabs } from 'antd'
 import { Helmet } from 'react-helmet'
-import { withRouter } from 'dva/router'
+import { withRouter, routerRedux } from 'dva/router'
 import '../themes/index.less'
 import './app.less'
 import Error from './error'
 
+import lodash from 'lodash'
+
 const { prefix, openPages } = config
 
+const TabPane = Tabs.TabPane;
+
 const { Header, Bread, Footer, Sider, styles } = Layout
+
 let lastHref
 
+
+const moduleArr = []
+let activeKey = '0';
+
 const App = ({ children, dispatch, app, loading, location }) => {
-  const { user, siderFold, darkTheme, isNavbar, menuPopoverVisible, navOpenKeys, menu, permissions } = app
+  const { user,   siderFold, darkTheme, isNavbar, menuPopoverVisible, navOpenKeys, menu, permissions } = app
   let { pathname } = location
   pathname = pathname.startsWith('/') ? pathname : `/${pathname}`
   const { iconFontJS, iconFontCSS, logo } = config
@@ -81,26 +91,73 @@ const App = ({ children, dispatch, app, loading, location }) => {
       {children}
     </div>)
   }
+  if (current.length) {
+    let cu = lodash.cloneDeep(children);
+
+    if (moduleArr.filter(item => item.key === current[0].route).length == 0) {
+      moduleArr.push({
+        title: current[0].name,
+        content: cu,
+        key: current[0].route
+      })
+    }
+    activeKey = current[0].route      
+  }
+  if (moduleArr.length < 1) return (<div></div>);
+
+
+  const onChange = (key) => {   
+    dispatch(routerRedux.push({ pathname: key}))
+ } 
+
+  const remove = (targetKey) => {
+    let curKey = activeKey;
+    let lastIndex;
+    moduleArr.forEach((pane, i) => {
+      if (pane.key === targetKey) {
+        lastIndex = i - 1;
+      }
+    });
+    moduleArr.splice(lastIndex + 1,1);
+    if (lastIndex >= 0 && curKey === targetKey) {
+      curKey = moduleArr[lastIndex].key;
+    }
+    dispatch(routerRedux.push({ pathname: curKey }))
+  }  
+
+  const onEdit = (targetKey, action) => {
+    if (action == "remove") {
+      remove(targetKey)
+    }  
+     //[action](targetKey);
+   }
+
   return (
     <div>
       <Loader fullScreen spinning={loading.effects['app/query']} />
       <Helmet>
-        <title>ANTD ADMIN</title>
+        <title>eud</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" href={logo} type="image/x-icon" />
         {iconFontJS && <script src={iconFontJS} />}
         {iconFontCSS && <link rel="stylesheet" href={iconFontCSS} />}
       </Helmet>
       <div className={classnames(styles.layout, { [styles.fold]: isNavbar ? false : siderFold }, { [styles.withnavbar]: isNavbar })}>
+       
+        <Header {...headerProps} />
         {!isNavbar ? <aside className={classnames(styles.sider, { [styles.light]: !darkTheme })}>
           {siderProps.menu.length === 0 ? null : <Sider {...siderProps} />}
         </aside> : ''}
         <div className={styles.main}>
-          <Header {...headerProps} />
-          <Bread {...breadProps} />
+        
+          {/*<Bread {...breadProps} />*/}
           <div className={styles.container}>
             <div className={styles.content}>
-              {hasPermission ? children : <Error />}
+              {/*{hasPermission ? children : <Error />}*/}
+              <Tabs type="editable-card" onEdit={onEdit} activeKey={activeKey} onChange={onChange} hideAdd>               
+               
+                {moduleArr.map(pane => <TabPane tab={pane.title} key={pane.key} >{pane.content}</TabPane>)}
+              </Tabs>
             </div>
           </div>
           <Footer />
@@ -115,7 +172,7 @@ App.propTypes = {
   location: PropTypes.object,
   dispatch: PropTypes.func,
   app: PropTypes.object,
-  loading: PropTypes.object,
+  loading: PropTypes.object,  
 }
 
 export default withRouter(connect(({ app, loading }) => ({ app, loading }))(App))

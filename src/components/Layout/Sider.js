@@ -15,15 +15,11 @@ const Sider = ({ siderFold, darkTheme, location, changeTheme, navOpenKeys, chang
     changeOpenKeys,
   }
   return (
-    <div>
-      <div className={styles.logo}>
-        <img alt={'logo'} src={config.logo} />
-        {siderFold ? '' : <span>{config.name}</span>}
-      </div>
-      <Menus {...menusProps} />
+    <div>     
+      <Menus {...menusProps} />     
       {!siderFold ? <div className={styles.switchtheme}>
-        <span><Icon type="bulb" />Switch Theme</span>
-        <Switch onChange={changeTheme} defaultChecked={darkTheme} checkedChildren="Dark" unCheckedChildren="Light" />
+        <span><Icon type="bulb" />切换主题</span>
+        <Switch onChange={changeTheme} defaultChecked={darkTheme} checkedChildren="黑" unCheckedChildren="白" />
       </div> : ''}
     </div>
   )

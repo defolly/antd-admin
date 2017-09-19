@@ -13,7 +13,7 @@
   display: flex;
   justify-content: space-between;
   height: 47px;
-  background-color: #fff;
+  background-color: #3e3e3e;
   z-index: 999;
 
   .rightWarpper {
@@ -35,6 +35,33 @@
       background-color: fade(@primary-color, 15%);
     }
   }
+
+    .logo {
+      text-align: center;
+      height: 40px;
+      line-height: 40px;
+      cursor: pointer;
+      margin: 2px 2px;
+      transition: @transition-ease-out;
+      overflow: hidden;
+
+      img {
+        width: 40px;
+        margin-right: 8px;
+        transition: @transition-ease-out;
+      }
+
+      span {
+        vertical-align: text-bottom;
+        font-size: 16px;
+        text-transform: uppercase;
+        display: inline-block;
+      }
+
+      .anticon {
+        transition: @transition-ease-out;
+      }
+    }
 }
 
 .popovermenu {

@@ -15,6 +15,8 @@ export default {
   namespace: 'app',
   state: {
     user: {},
+    activeKey:"/user",
+    moduleArr: [],
     permissions: {
       visit: [],
     },

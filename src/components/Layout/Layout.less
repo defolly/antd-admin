@@ -66,7 +66,7 @@
     position: absolute;
     overflow: visible;
     padding-bottom: 24px;
-    height: 100vh;
+    height: ~"calc(100vh - 48px)";
     transition: @transition-ease-out;
     box-shadow: @shadow-1;
     color: #999;
@@ -80,32 +80,7 @@
       }
     }
 
-    .logo {
-      text-align: center;
-      height: 40px;
-      line-height: 40px;
-      cursor: pointer;
-      margin: 28px 0;
-      transition: @transition-ease-out;
-      overflow: hidden;
-
-      img {
-        width: 40px;
-        margin-right: 8px;
-        transition: @transition-ease-out;
-      }
-
-      span {
-        vertical-align: text-bottom;
-        font-size: 16px;
-        text-transform: uppercase;
-        display: inline-block;
-      }
-
-      .anticon {
-        transition: @transition-ease-out;
-      }
-    }
+  
 
     .switchtheme {
       width: 100%;

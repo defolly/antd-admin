@@ -4,6 +4,7 @@ import { Menu, Icon, Popover } from 'antd'
 import classnames from 'classnames'
 import styles from './Header.less'
 import Menus from './Menu'
+import { config } from 'utils'
 
 const SubMenu = Menu.SubMenu
 
@@ -20,24 +21,27 @@ const Header = ({ user, logout, switchSider, siderFold, isNavbar, menuPopoverVis
     changeOpenKeys,
   }
   return (
+
     <div className={styles.header}>
-      {isNavbar
-        ? <Popover placement="bottomLeft" onVisibleChange={switchMenuPopover} visible={menuPopoverVisible} overlayClassName={styles.popovermenu} trigger="click" content={<Menus {...menusProps} />}>
-          <div className={styles.button}>
-            <Icon type="bars" />
-          </div>
-        </Popover>
-        : <div
-          className={styles.button}
-          onClick={switchSider}
-        >
-          <Icon type={classnames({ 'menu-unfold': siderFold, 'menu-fold': !siderFold })} />
-        </div>}
+      <div className={styles.logo}>
+        <img alt={'logo'} src={config.logo} />
+        {siderFold ? '' : <span>{config.name}</span>}
+      </div>
+     
       <div className={styles.rightWarpper}>
-        <div className={styles.button}>
-          <Icon type="mail" />
-        </div>
-        <Menu mode="horizontal" onClick={handleClickMenu}>
+        {isNavbar
+          ? <Popover placement="bottomLeft" onVisibleChange={switchMenuPopover} visible={menuPopoverVisible} overlayClassName={styles.popovermenu} trigger="click" content={<Menus {...menusProps} />}>
+            <div className={styles.button}>
+              <Icon type="bars" />
+            </div>
+          </Popover>
+          : <div
+            className={styles.button}
+            onClick={switchSider}
+          >
+            <Icon alt={ siderFold ? '展开':'收缩' } type={classnames({ 'menu-unfold': siderFold, 'menu-fold': !siderFold })} />
+          </div>}
+        <Menu mode="horizontal" theme="dark" onClick={handleClickMenu}>
           <SubMenu
             style={{
               float: 'right',
@@ -47,9 +51,13 @@ const Header = ({ user, logout, switchSider, siderFold, isNavbar, menuPopoverVis
               {user.username}
             </span>}
           >
-            <Menu.Item key="logout">
-              Sign out
+            <Menu.Item key="changePasswork">
+              更改密码
             </Menu.Item>
+            <Menu.Item key="logout">
+              退出
+            </Menu.Item>
+             
           </SubMenu>
         </Menu>
       </div>
